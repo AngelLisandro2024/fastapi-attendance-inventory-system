@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vico code - Sistema de Control{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-brand-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-code-branch text-2xl text-brand-100"></i>
+                    <span class="font-bold text-xl tracking-wide">Vico code</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-4">
+                    <a href="/" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-700 transition"><i class="fa-solid fa-chart-line mr-1"></i> Inicio</a>
+                    <a href="/empleados" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-700 transition"><i class="fa-solid fa-users mr-1"></i> Empleados</a>
+                    <a href="/asistencia" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-700 transition"><i class="fa-solid fa-user-clock mr-1"></i> Asistencia</a>
+                    <a href="/inventario" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-700 transition"><i class="fa-solid fa-boxes-stacked mr-1"></i> Inventario</a>
+                    <a href="/reporte/pdf" target="_blank" class="bg-brand-600 hover:bg-brand-500 text-white px-3 py-2 rounded-md text-sm font-medium shadow transition flex items-center">
+                        <i class="fa-solid fa-file-pdf mr-2"></i> Reporte PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 text-center py-4 text-sm mt-auto">
+        <p>&copy; 2026 Vico code - Sistema Interno para Empleados</p>
+    </footer>
+
+</body>
+</html>

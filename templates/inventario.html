@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Inventario - Vico code{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-brand-900">Control de Inventario y Asignaciones</h1>
+        <p class="text-gray-600">Movimientos de insumos/equipos para empleados con registro de fechas y horas.</p>
+    </div>
+    <a href="/reporte/pdf" target="_blank" class="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium shadow flex items-center justify-center">
+        <i class="fa-solid fa-file-pdf mr-2"></i> Descargar PDF Inventario
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    <!-- Formulario Inventario/Asignación -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+        <h2 class="text-lg font-bold text-brand-800 mb-4">Registrar Movimiento</h2>
+        <form action="/inventario/registrar" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Item / Equipo</label>
+                <input type="text" name="item_nombre" placeholder="Ej. Laptop Dell, Teclado, etc." required class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+                <input type="number" name="cantidad" value="1" min="1" required class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Empleado Asignado</label>
+                <select name="empleado_id" required class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    {% for emp in empleados %}
+                    <option value="{{ emp.id }}">{{ emp.nombre }} {{ emp.apellido }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha/Hora de Entrada (Entrega)</label>
+                <input type="datetime-local" name="fecha_entrada" required class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha/Hora de Salida (Devolución opcional)</label>
+                <input type="datetime-local" name="fecha_salida" class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Estado / Observación</label>
+                <input type="text" name="observacion" placeholder="Ej. En uso, prestado, devuelto" class="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            </div>
+
+            <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-lg shadow transition">
+                <i class="fa-solid fa-boxes-packing mr-1"></i> Guardar Movimiento
+            </button>
+        </form>
+    </div>
+
+    <!-- Tabla Inventario -->
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md border border-gray-100">
+        <h2 class="text-lg font-bold text-brand-800 mb-4">Registros de Inventario y Movimientos</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-brand-50 text-brand-900 text-sm">
+                        <th class="p-3 border-b">Ítem</th>
+                        <th class="p-3 border-b">Cant.</th>
+                        <th class="p-3 border-b">Empleado</th>
+                        <th class="p-3 border-b">F. Entrada</th>
+                        <th class="p-3 border-b">F. Salida</th>
+                        <th class="p-3 border-b">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    {% for item in inventario %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 font-semibold text-gray-800">{{ item.item_nombre }}</td>
+                        <td class="p-3">{{ item.cantidad }}</td>
+                        <td class="p-3 text-gray-700">{{ item.empleado.nombre }} {{ item.empleado.apellido }}</td>
+                        <td class="p-3 text-xs text-gray-600">{{ item.fecha_entrada.strftime('%d/%m/%Y %I:%M %p') }}</td>
+                        <td class="p-3 text-xs text-gray-600">
+                            {% if item.fecha_salida %}
+                                {{ item.fecha_salida.strftime('%d/%m/%Y %I:%M %p') }}
+                            {% else %}
+                                <span class="text-gray-400 italic">Pendiente</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-brand-100 text-brand-800">
+                                {{ item.observacion or 'Asignado' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-gray-500">No hay registros de inventario guardados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
